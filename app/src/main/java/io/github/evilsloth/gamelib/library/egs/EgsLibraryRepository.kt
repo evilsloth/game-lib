@@ -57,6 +57,8 @@ class EgsLibraryRepository @Inject constructor(
                 name = dbGame?.name ?: getProductName(it),
                 platform = LibraryItem.Platform.EGS,
                 url = dbGame?.url,
+                rating = dbGame?.rating,
+                userRating = dbGame?.userRating,
                 coverUrl = dbGame?.coverUrl,
                 thumbnailUrl = dbGame?.thumbnailUrl
             )

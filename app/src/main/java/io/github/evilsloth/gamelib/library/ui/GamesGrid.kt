@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -88,14 +89,14 @@ private fun GameCard(
                 modifier = Modifier.padding(8.dp)
             )
         }
-        Box(Modifier.height(40.dp), contentAlignment = Alignment.CenterStart) {
+        Column(Modifier.height(60.dp).padding(horizontal = 4.dp, vertical = 2.dp), verticalArrangement = Arrangement.Center) {
             Text(
                 text = game.name,
-                Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodySmall
             )
+            GameRating(game)
         }
     }
 }

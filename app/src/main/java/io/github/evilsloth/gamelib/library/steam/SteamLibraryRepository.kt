@@ -46,6 +46,8 @@ class SteamLibraryRepository @Inject constructor(
                     name = dbGame?.name ?: it.name,
                     platform = LibraryItem.Platform.STEAM,
                     url = dbGame?.url,
+                    rating = dbGame?.rating,
+                    userRating = dbGame?.userRating,
                     coverUrl = dbGame?.coverUrl,
                     thumbnailUrl = dbGame?.thumbnailUrl
                 )

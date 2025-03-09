@@ -47,6 +47,8 @@ class GogLibraryRepository @Inject constructor(
                     name = dbGame?.name ?: it.title,
                     platform = LibraryItem.Platform.GOG,
                     url = dbGame?.url,
+                    rating = dbGame?.rating,
+                    userRating = dbGame?.userRating,
                     coverUrl = dbGame?.coverUrl,
                     thumbnailUrl = dbGame?.thumbnailUrl
                 )

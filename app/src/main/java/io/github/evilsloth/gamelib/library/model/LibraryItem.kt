@@ -12,6 +12,8 @@ data class LibraryItem(
     val name: String,
     val platform: Platform,
     val url: String?,
+    val rating: Double?,
+    @ColumnInfo(name = "user_rating") val userRating: Double?,
     @ColumnInfo(name = "cover_url") val coverUrl: String?,
     @ColumnInfo(name = "thumbnail_url") val thumbnailUrl: String?
 ) {

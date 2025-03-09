@@ -33,6 +33,8 @@ class GameRepository @Inject constructor(private val gameDbApiService: GameDbApi
                 ),
                 name = it.name,
                 url = "https://www.igdb.com/games/" + it.slug,
+                rating = it.rating,
+                userRating = it.userRating,
                 thumbnailUrl = it.imageId?.let { imageId -> IgdbApiConstants.THUMBNAIL_URL + imageId + ".jpg" },
                 coverUrl = it.imageId?.let { imageId -> IgdbApiConstants.COVERS_URL + imageId + ".jpg" }
             )

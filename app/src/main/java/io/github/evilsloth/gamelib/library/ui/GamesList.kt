@@ -1,19 +1,22 @@
 package io.github.evilsloth.gamelib.library.ui
 
+import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,11 +26,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import io.github.evilsloth.gamelib.R
+import io.github.evilsloth.gamelib.config.ui.theme.GameLibTheme
 import io.github.evilsloth.gamelib.library.model.LibraryItem
+import io.github.evilsloth.gamelib.library.model.LibraryItem.Platform
 
 @Composable
 fun GamesList(
@@ -80,25 +87,62 @@ private fun GameListItem(
                     .size(width = 48.dp, height = 64.dp)
                     .clip(RoundedCornerShape(8.dp))
             )
-            Text(
-                text = game.name,
-                Modifier.padding(horizontal = 4.dp, vertical = 2.dp).weight(1.0f),
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Column(
+                Modifier
+                    .padding(horizontal = 4.dp, vertical = 2.dp)
+                    .weight(1.0f)
+            ) {
+                Text(
+                    text = game.name,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                GameRating(game = game)
+            }
             Image(
                 painterResource(
                     id = when (game.platform) {
-                        LibraryItem.Platform.AMAZON -> R.drawable.icon_amazon
-                        LibraryItem.Platform.EGS -> R.drawable.icon_epic
-                        LibraryItem.Platform.GOG -> R.drawable.icon_gog
-                        LibraryItem.Platform.STEAM -> R.drawable.icon_steam
+                        Platform.AMAZON -> R.drawable.icon_amazon
+                        Platform.EGS -> R.drawable.icon_epic
+                        Platform.GOG -> R.drawable.icon_gog
+                        Platform.STEAM -> R.drawable.icon_steam
                     }
                 ),
                 contentDescription = null,
                 modifier = Modifier.padding(8.dp)
             )
+        }
+    }
+}
+
+@Preview(showBackground = true, device = Devices.PIXEL, uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Composable
+private fun GameListItemPreview() {
+    GameLibTheme {
+        Scaffold { contentPadding ->
+            Box(
+                Modifier
+                    .padding(contentPadding)
+                    .padding(8.dp)
+            ) {
+                GameListItem(
+                    game = LibraryItem(
+                        id = 0,
+                        igdbId = 0,
+                        externalId = "1",
+                        platform = Platform.STEAM,
+                        name = "Witcher 3: Wild Hunt",
+                        url = "https://google.com",
+                        rating = 92.1823498234,
+                        userRating = 90.32349234,
+                        coverUrl = null,
+                        thumbnailUrl = null
+                    ),
+                    onClick = {},
+                    onLongClick = {}
+                )
+            }
         }
     }
 }

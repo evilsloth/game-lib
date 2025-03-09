@@ -13,13 +13,16 @@ import io.github.evilsloth.gamelib.library.egs.EgsLibraryRepository
 import io.github.evilsloth.gamelib.library.gog.GogLibraryRepository
 import io.github.evilsloth.gamelib.library.model.LibraryItem
 import io.github.evilsloth.gamelib.library.model.LibraryItemDao
+import io.github.evilsloth.gamelib.library.model.SortingOption
 import io.github.evilsloth.gamelib.library.steam.SteamLibraryRepository
 import io.github.evilsloth.gamelib.preferences.UserPreferencesRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,13 +43,15 @@ class LibraryViewModel @Inject constructor(
     val filterActive = MutableStateFlow(false)
     val searchOpened = MutableStateFlow(false)
     val searchValue = MutableStateFlow("")
+    val sortingBy = MutableStateFlow(SortingOption.NAME_ASC)
 
     val gridView = MutableStateFlow(userPreferencesRepository.gridView)
 
     val refreshing = MutableStateFlow(false)
-    val games: StateFlow<List<LibraryItem>?> = searchValue
-        .flatMapLatest {
-            if (it.isEmpty()) libraryItemDao.getAll() else libraryItemDao.getAllByNameLike(it)
+    val games: StateFlow<List<LibraryItem>?> = combine(searchValue, sortingBy) { query, sort -> Pair(query, sort) }
+        .flatMapLatest { pair ->
+            val results = if (pair.first.isEmpty()) libraryItemDao.getAll() else libraryItemDao.getAllByNameLike(pair.first)
+            results.map { it -> it.sortedWith(pair.second.comparator) }
         }
         .stateIn(
             scope = viewModelScope,
@@ -64,9 +69,8 @@ class LibraryViewModel @Inject constructor(
                         egsLibraryRepository.getUserGames() +
                         amazonLibraryRepository.getUserGames() +
                         steamLibraryRepository.getUserGames()
-                val sorted = allGames.sortedBy { it.name }
                 libraryItemDao.deleteAll()
-                libraryItemDao.insertAll(sorted)
+                libraryItemDao.insertAll(allGames)
             } catch (e: Exception) {
                 Log.e(TAG, "loadLibraryGames", e)
                 Toast.makeText(context, R.string.library_error, Toast.LENGTH_LONG).show()
@@ -88,6 +92,10 @@ class LibraryViewModel @Inject constructor(
     fun clearSearch() {
         search("")
         searchOpened.value = false
+    }
+
+    fun sortBy(option: SortingOption) {
+        sortingBy.value = option
     }
 
     fun toggleView() {

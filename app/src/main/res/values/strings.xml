@@ -30,4 +30,11 @@
     <string name="log_in_to_egs">Log in to Epic Games Store</string>
     <string name="log_in_to_amazon">Log in to Amazon Prime Gaming</string>
     <string name="log_in_to_steam">Log in to Steam</string>
+    <string name="sort_name_asc">Name Ascending (A-Z)</string>
+    <string name="sort_name_desc">Name Descending (Z-A)</string>
+    <string name="rating_asc">Rating (Low to High)</string>
+    <string name="rating_desc">Rating (High to Low)</string>
+    <string name="user_rating_asc">User rating (Low to High)</string>
+    <string name="user_rating_desc">User rating (High to Low)</string>
+    <string name="sort_by">Sort by</string>
 </resources>

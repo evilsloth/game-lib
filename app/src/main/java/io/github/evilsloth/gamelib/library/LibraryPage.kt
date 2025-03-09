@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.SortByAlpha
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -32,7 +33,10 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -50,6 +54,7 @@ import io.github.evilsloth.gamelib.library.ui.EmptyResultsFiltered
 import io.github.evilsloth.gamelib.library.ui.GamesGrid
 import io.github.evilsloth.gamelib.library.ui.GamesList
 import io.github.evilsloth.gamelib.library.ui.SearchFilters
+import io.github.evilsloth.gamelib.library.ui.SortingDialog
 import kotlinx.coroutines.launch
 
 private const val TAG = "LibraryPage"
@@ -67,6 +72,9 @@ fun LibraryPage(
     val refreshing by libraryViewModel.refreshing.collectAsState()
     val gamesState by libraryViewModel.games.collectAsState()
     val gridView by libraryViewModel.gridView.collectAsState()
+
+    var showSortingOptions by remember { mutableStateOf(false) }
+    val sortingBy by libraryViewModel.sortingBy.collectAsState()
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -95,6 +103,9 @@ fun LibraryPage(
                         if (!searchOpened) {
                             IconButton(onClick = { libraryViewModel.toggleView() }) {
                                 Icon(Icons.AutoMirrored.Default.List, contentDescription = null)
+                            }
+                            IconButton(onClick = { showSortingOptions = true }) {
+                                Icon(Icons.Default.SortByAlpha, contentDescription = null)
                             }
                             IconButton(
                                 onClick = { libraryViewModel.openSearch() },
@@ -169,6 +180,17 @@ fun LibraryPage(
                 }
             }
         }
+    }
+
+    if (showSortingOptions) {
+        SortingDialog(
+            selectedOption = sortingBy,
+            onSelectOption = { option ->
+                libraryViewModel.sortBy(option)
+                showSortingOptions = false
+            },
+            onClose = { showSortingOptions = false }
+        )
     }
 }
 

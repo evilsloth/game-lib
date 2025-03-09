@@ -72,6 +72,8 @@ class AmazonLibraryRepository @Inject constructor(
                 name = dbGame?.name ?: it.product.title,
                 platform = LibraryItem.Platform.AMAZON,
                 url = dbGame?.url,
+                rating = dbGame?.rating,
+                userRating = dbGame?.userRating,
                 coverUrl = dbGame?.coverUrl,
                 thumbnailUrl = dbGame?.thumbnailUrl
             )

@@ -9,7 +9,7 @@ import io.github.evilsloth.gamelib.library.model.LibraryItemDao
 
 @Database(
     entities = [EgsProductEntity::class, LibraryItem::class],
-    version = 5
+    version = 6
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun egsProductDao(): EgsProductDao
